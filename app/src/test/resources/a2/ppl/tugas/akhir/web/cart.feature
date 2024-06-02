@@ -1,5 +1,4 @@
 Feature: Cart
-
   Scenario: Berhasil melihat daftar barang pada halaman Cart ketika terdapat minimal 1 barang
     Given Pengguna berhasil melakukan login ke dalam aplikasi
     And Pengguna berhasil mengakses halaman Dashboard aplikasi
