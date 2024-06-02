@@ -7,7 +7,6 @@ import java.util.Map;
 
 import a2.ppl.tugas.akhir.api.utils.ApiClient;
 import a2.ppl.tugas.akhir.api.utils.CustomAssertionError;
-import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
@@ -17,59 +16,71 @@ import io.cucumber.java.en.When;
 
 public class GetUserSteps {
     private Map<String, String> headers = new HashMap<>();
-    private String jsonBody = "{}";
     private Response response;
-    private String baseUrl = "https://dummyapi.io/data/v1/";
     private CustomAssertionError listError = new CustomAssertionError();
 
+    public void sendError() {
+        if (listError.getMessage().length() > 0) {
+            throw listError;
+        }
+    }
+
     @Given("Menambahkan app-id yang tidak terdaftar pada header request {string}")
-    void setUnregisteredAppId(String appId) {
+    public void setUnregisteredAppId(String appId) {
         headers.put("app-id", appId);
     }
 
-    @Given("Given Menambahkan app-id yang terdaftar pada header request {string}")
-    void setValidAppId(String appId) {
+    @Given("Menambahkan app-id yang terdaftar pada header request {string}")
+    public void setValidAppId(String appId) {
         headers.put("app-id", appId);
     }
 
-    @When("When Kirim req GET ke endpoint {string}")
-    void sendGetRequest(String url) {
-        ApiClient client = new ApiClient(url);
+    @When("Kirim req GET ke endpoint {string}")
+    public void sendGetRequest(String url) {
+        ApiClient client = new ApiClient("", headers);
         Response res = client.get(url);
         this.response = res;
     }
 
-    @Then("Then Menerima Status Code : {int}")
-    void receiveStatusCode(Integer statusCode) {
+    @Then("Menerima Status Code : {int} {string}")
+    public void receiveStatusCode(Integer statusCode, String status) {
         try {
-            assertEquals(response.statusCode(), statusCode);
+            assertEquals(statusCode, response.statusCode());
         } catch (AssertionError e) {
             listError.appendMessage(e.toString());
         }
     }
 
-    @Then("And Meneriman Respond Body : Respond JSON sesuai dengan ID")
-    void receiveResponseBasedId() {
+    @Then("Meneriman Respond Body : Respond JSON sesuai dengan ID {string}")
+    public void receiveResponseBasedId(String expectedId) {
         JsonPath json = response.jsonPath();
+        String error = json.getString("error");
         String id = json.getString("id");
         try {
-
+            assertEquals(id, expectedId);
+        } catch (AssertionError e) {
+            listError.appendMessage(e.toString());
         } catch (Exception e) {
-            // TODO: handle exception
+            listError.appendMessage(e.toString());
         }
+        if (error != null) {
+            listError.appendMessage(error);
+        }
+        this.sendError();
     }
 
     @Then("Meneriman Respond Body : {string}")
-    void receiveResponseBody(String value) {
+    public void receiveResponseBody(String value) {
         JsonPath json = response.jsonPath();
         String error = json.getString("error");
         try {
-            assertEquals(error, value);
+            assertEquals(value, error);
         } catch (AssertionError e) {
             listError.appendMessage(e.toString());
         }
         if (listError.getMessage().length() > 0) {
             throw listError;
         }
+        this.sendError();
     }
 }

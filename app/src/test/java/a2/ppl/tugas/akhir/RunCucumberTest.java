@@ -10,8 +10,8 @@ import static io.cucumber.junit.platform.engine.Constants.GLUE_PROPERTY_NAME;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectPackages("a2.ppl.tugas.akhir.api.get")
+@SelectPackages("a2.ppl.tugas.akhir.api")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "a2.ppl.tugas.akhir.api.get")
+@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "a2.ppl.tugas.akhir.api")
 public class RunCucumberTest {
 }
