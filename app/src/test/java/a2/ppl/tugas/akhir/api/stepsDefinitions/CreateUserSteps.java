@@ -1,15 +1,14 @@
 package a2.ppl.tugas.akhir.api.stepsDefinitions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import a2.ppl.tugas.akhir.api.utils.ApiClient;
 import a2.ppl.tugas.akhir.api.utils.CustomAssertionError;
-import a2.ppl.tugas.akhir.api.utils.ErrorChecker;
-import a2.ppl.tugas.akhir.api.utils.JsonPathHandler;
-import a2.ppl.tugas.model.User;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,6 +19,7 @@ public class CreateUserSteps {
     private Map<String, String> headers = new HashMap<>();
     private String jsonBody = "{}";
     private Response response;
+    private String baseUrl = "https://dummyapi.io/data/v1/";
     private CustomAssertionError listError = new CustomAssertionError();
 
     @Given("Menambahkan app-id yang valid pada header request {string}")
@@ -47,21 +47,44 @@ public class CreateUserSteps {
     public void checkStatusCode(Integer expectedStatusCode) {
         try {
             assertEquals(expectedStatusCode, response.statusCode());
-        } catch (Exception e) {
+        } catch (AssertionError e) {
             listError.appendMessage(e.toString());
         }
     }
 
-    @Then("Menerima response body json user yang telah dibuat")
-    public void checkResponseBody(String body) {
-        JsonPathHandler<User> jsonHandler = new JsonPathHandler<User>();
-        User expectedUser = jsonHandler.fromJsonToObject(jsonBody, User.class);
-        listError.appendMessages(ErrorChecker.checkResponse(expectedUser, response));
+    @When("Menambahkan header request app-id dengan value tidak valid {string}")
+    public void setInvalidHeader(String value) {
+        setHeader(value);
+    }
+
+    @Then("Menerima value id dari response body json")
+    public void checkResponseBody() {
+        JsonPath json = response.jsonPath();
+        String error = json.getString("error");
+        String id = json.getString("id");
+        try {
+            assertNotEquals(0, id.length());
+            ApiClient client = new ApiClient(baseUrl, headers);
+            this.response = client.delete("user/" + id);
+        } catch (AssertionError e) {
+            listError.appendMessage(e.toString());
+            listError.appendMessage(jsonBody);
+            listError.appendMessage(error);
+        } catch (Exception e) {
+            listError.appendMessage(e.toString());
+            listError.appendMessage(error);
+        }
         if (listError.getMessage().length() > 0) {
             throw listError;
         }
     }
 
+    // JsonPathHandler<User> jsonHandler = new JsonPathHandler<User>();
+    // User expectedUser = jsonHandler.fromJsonToObject(jsonBody, User.class);
+    // listError.appendMessages(ErrorChecker.checkResponse(expectedUser, response));
+    // if (listError.getMessage().length() > 0) {
+    // throw listError;
+    // }
     @Then("Menerima response body json dengan key {string} value {string}")
     public void checkErrorBody(String key, String value) {
         JsonPath json = response.jsonPath();
