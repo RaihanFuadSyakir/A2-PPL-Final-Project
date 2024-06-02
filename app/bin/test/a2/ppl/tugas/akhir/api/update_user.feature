@@ -20,4 +20,35 @@ TC3-14
         And Menerima response body JSON User yang telah diubah
     Scenario: Mengubah value dari field title dengan isi "miss"
         Given Menambahkan app-id yang valid pada header request "6633dd597309359fe9ceb8ad"
-        When Me
+        When Mengisi request body dengan
+        """
+        {
+            "title" : "miss"
+        }
+        """
+        And Mengirim request ke "https://dummyapi.io/data/v1/user/60d0fe4f5311236168a109cc" dengan method Update
+        Then Status Response: 200 "OK"
+        And Menerima response body JSON User yang telah diubah
+    Scenario: Mengubah value dari field gender dengan isi "male"
+        Given Menambahkan app-id yang valid pada header request "6633dd597309359fe9ceb8ad"
+        When Mengisi request body dengan
+        """
+        {
+            "gender" : "male"
+        }
+        """
+        And Mengirim request ke "https://dummyapi.io/data/v1/user/60d0fe4f5311236168a109cc" dengan method Update
+        Then Status Response: 200 "OK"
+        And Menerima response body JSON User yang telah diubah
+    Scenario: Mengubah value dari field lastName dengan lebih dari 50 karakter
+        Given Menambahkan app-id yang valid pada header request "6633dd597309359fe9ceb8ad"
+        When Mengisi request body dengan
+        """
+        {
+            "lastName" : "asdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasd"
+        }
+        And Mengirim request ke "https://dummyapi.io/data/v1/user/60d0fe4f5311236168a109cc" dengan method Update
+        Then Status Response: 400 "Bad Request"
+        And Menerima response body JSON User yang telah diubah
+
+
