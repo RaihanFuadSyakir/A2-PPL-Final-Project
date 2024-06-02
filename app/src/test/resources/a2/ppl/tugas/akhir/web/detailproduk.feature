@@ -3,7 +3,7 @@ Feature: Detail Produk
   Scenario: Berhasil melihat Detail Produk dari barang
     Given Pengguna berhasil login ke dalam aplikasi
     And Pengguna berhasil mengakses halaman Dashboard aplikasi
-    When Pengguna klik gambar "Produk Sauce Labs Backpack" pada halaman Dashboard
+    When Pengguna klik gambar Produk "Sauce Labs Backpack" pada halaman Dashboard
     Then Sistem menampilkan Gambar, Qty, Description, Nama, Harga Satuan, dan button (Add to cart atau Remove) dari barang pada halaman Detail Produk
 
   Scenario: Berhasil kembali ke halaman Dashboard dari halaman Detail Produk
