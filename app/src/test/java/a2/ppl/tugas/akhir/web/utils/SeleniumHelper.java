@@ -34,6 +34,11 @@ public class SeleniumHelper {
         button.click();
     }
 
+    public void clickButtonByName(String name) {
+        WebElement button = getElementByName(name);
+        button.click();
+    }
+
     public void clickElementById(String id) {
         WebElement button = getElementById(id);
         button.click();
@@ -56,6 +61,15 @@ public class SeleniumHelper {
     public boolean isElementDisplayedByClassName(String className) {
         try {
             WebElement element = getElementByClassName(className);
+            return element.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isElementDisplayedByName(String name) {
+        try {
+            WebElement element = getElementByName(name);
             return element.isDisplayed();
         } catch (Exception e) {
             return false;

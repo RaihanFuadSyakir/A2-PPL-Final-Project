@@ -5,10 +5,17 @@ import io.cucumber.java.en.When;
 import a2.ppl.tugas.akhir.web.utils.ConfigReader;
 import a2.ppl.tugas.akhir.web.utils.SeleniumHelper;
 import io.cucumber.java.en.Then;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Duration;
 
 public class LoginSteps {
     WebDriver driver;
@@ -30,7 +37,9 @@ public class LoginSteps {
 
     @Given("Pengguna berada pada halaman login")
     public void checkIsCurrentLoginPage() {
-        seleniumHelper.isElementDisplayedById("login-button");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("login-button")));
+        assertEquals(seleniumHelper.isElementDisplayedById("login-button"), true);
     }
 
     @Given("Pengguna menginput username {string} dan password {string}")
