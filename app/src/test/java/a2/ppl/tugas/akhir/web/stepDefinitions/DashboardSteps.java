@@ -50,12 +50,20 @@ public class DashboardSteps {
         assertEquals(expected, currentUrl);
     }
 
+    @Given("tambah satu barang")
+    public void addOneProduct() {
+        addItem("add to cart", "Sauce Labs Backpack");
+    }
+
     @When("menekan tombol {string} pada card barang {string}")
     public void addItem(String buttonText, String productName) {
         // WebElement product = driver.findElement(By.xpath("//div[contains(text(), '" +
         // productName + "')]"));
         // WebElement button = product.findElement(By.id(productName))
-        seleniumHelper.clickButtonByName(productName);
+        productName = productName.toLowerCase();
+        String combined = buttonText + " " + productName;
+        combined = combined.replace(' ', '-');
+        seleniumHelper.clickButtonByName(combined);
     }
 
     @Then("halaman dashboard menampilkan katalog barang")
@@ -63,19 +71,27 @@ public class DashboardSteps {
         String value = seleniumHelper.getElementByClassName("title").getText();
         String expected = "Products";
         assertEquals(expected, value);
+        driver.quit();
     }
 
     @Then("tombol {string} dari barang {string} berubah menjadi {string}")
     public void checkButtonState(String pastButtonName, String productName, String currentButtonName) {
         productName = productName.toLowerCase();
-        String buttonName = (currentButtonName + productName).replace(' ', '-');
-        assertEquals(seleniumHelper.isElementDisplayedByClassName(buttonName), true);
+        String combined = currentButtonName + " " + productName;
+        combined = combined.replace(' ', '-');
+        assertEquals(true, seleniumHelper.isElementDisplayedByName(combined));
+
     }
 
     @Then("jumlah barang pada icon cart menjadi {int}")
-    void checkItemInCart(Integer totalItems) {
+    public void checkItemInCart(Integer totalItems) {
         WebElement cart = seleniumHelper.getElementByClassName("shopping_cart_badge");
-        assertEquals(cart.getText(), totalItems);
+        try {
+            assertEquals(cart.getText(), String.valueOf(totalItems));
+
+        } finally {
+            driver.quit();
+        }
     }
 
 }

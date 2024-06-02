@@ -66,4 +66,13 @@ public class SeleniumHelper {
             return false;
         }
     }
+
+    public boolean isElementDisplayedByName(String name) {
+        try {
+            WebElement element = getElementByName(name);
+            return element.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
