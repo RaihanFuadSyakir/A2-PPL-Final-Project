@@ -34,6 +34,11 @@ public class SeleniumHelper {
         button.click();
     }
 
+    public void clickButtonByName(String name) {
+        WebElement button = getElementByName(name);
+        button.click();
+    }
+
     public void clickElementById(String id) {
         WebElement button = getElementById(id);
         button.click();
