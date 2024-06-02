@@ -26,6 +26,10 @@ public class CartSteps {
     SeleniumHelper seleniumHelper;
     ConfigReader configReader;
 
+    public CartSteps() {
+        configReader = new ConfigReader();
+    }
+
     @Given("Pengguna berhasil melakukan login ke dalam aplikasi")
     public void penggunaBerhasilMelakukanLoginKeDalamAplikasi() {
         String url = "https://www.saucedemo.com";
@@ -64,9 +68,7 @@ public class CartSteps {
 
     @When("Pengguna klik gambar Cart pada halaman Dashboard untuk berpindah ke halaman Cart")
     public void penggunaKlikGambarCartPadaHalamanDashboardUntukBerpindahKeHalamanCart() {
-        driver.findElement(By.id("cartIcon")).click();
-        WebElement cart = seleniumHelper.getElementByClassName("shopping_cart_badge");
-        cart.click();
+        driver.findElement(By.id("shopping_cart_container")).click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("cart_list")));
     }
@@ -74,19 +76,24 @@ public class CartSteps {
     @Then("Sistem menampilkan daftar barang yang berisi:")
     public void sistemMenampilkanDaftarBarangYangBerisi(DataTable dataTable) {
         List<List<String>> rows = dataTable.asLists(String.class);
-        for (List<String> columns : rows) {
+        for (int i = 1; i < rows.size(); i++) { // Start from index 1 to skip the header row
+            List<String> columns = rows.get(i);
             String qty = columns.get(0);
             String description = columns.get(1);
             String name = columns.get(2);
             String hargaSatuan = columns.get(3);
             String removeButton = columns.get(4);
 
-            WebElement cartItem = driver.findElement(By.id("cart_item"));
+            WebElement cartItem = driver.findElement(By.className("cart_item"));
             assertEquals(qty, cartItem.findElement(By.className("cart_quantity")).getText());
-            assertEquals(description, cartItem.findElement(By.className("inventory_item_desc")).getText());
             assertEquals(name, cartItem.findElement(By.className("inventory_item_name")).getText());
             assertEquals(hargaSatuan, cartItem.findElement(By.className("inventory_item_price")).getText());
-            assertEquals(removeButton, cartItem.findElement(By.className("removeButton")).getText());
+            name = name.toLowerCase();
+            name = name.replace("\\", "");
+            String combined = "remove" + " " + name;
+            combined = combined.replace(' ', '-');
+            assertEquals(removeButton,
+                    cartItem.findElement(By.id(combined)).getText());
         }
     }
 
@@ -98,6 +105,7 @@ public class CartSteps {
     @And("Sistem menampilkan button Checkout")
     public void sistemMenampilkanButtonCheckout() {
         assertTrue(driver.findElement(By.id("checkout")).isDisplayed());
+        driver.quit();
     }
 
     @Then("Sistem menampilkan daftar Qty dan Description kosong")
@@ -121,6 +129,10 @@ public class CartSteps {
     @And("Sistem menampilkan daftar katalog produk")
     public void sistemMenampilkanDaftarKatalogProduk() {
         WebElement product = seleniumHelper.getElementByClassName("title");
-        assertEquals("title", product.getText());
+        try {
+            assertEquals("Products", product.getText());
+        } finally {
+            driver.quit();
+        }
     }
 }

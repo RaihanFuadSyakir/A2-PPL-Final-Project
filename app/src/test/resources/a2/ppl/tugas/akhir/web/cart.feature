@@ -20,7 +20,7 @@ Feature: Cart
 
   Scenario: Berhasil kembali ke halaman dashboard
     Given Pengguna berhasil melakukan login ke dalam aplikasi
-    And Pengguna berhasil mengakses halaman Cart aplikasi
+    And Pengguna klik gambar Cart pada halaman Dashboard untuk berpindah ke halaman Cart
     When Pengguna klik button Continue Shopping
     Then Sistem berpindah ke halaman Dashboard
     And Sistem menampilkan daftar katalog produk
