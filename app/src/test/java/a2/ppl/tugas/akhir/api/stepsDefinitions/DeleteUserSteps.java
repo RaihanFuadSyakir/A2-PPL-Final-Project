@@ -16,6 +16,7 @@ import io.cucumber.java.en.When;
 public class DeleteUserSteps {
     private Map<String, String> headers = new HashMap<>();
     private Response response;
+    private Integer id;
     private CustomAssertionError listError = new CustomAssertionError();
 
     public void sendError() {
@@ -35,6 +36,7 @@ public class DeleteUserSteps {
     }
 
     @When("kirim request DELETE ke endpoint {string}")
+
     public void sendDeleteRequest(String url) {
         ApiClient client = new ApiClient(url);
         client.delete("");

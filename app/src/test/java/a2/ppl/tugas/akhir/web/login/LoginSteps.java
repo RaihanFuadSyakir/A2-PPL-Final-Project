@@ -1,4 +1,4 @@
-package a2.ppl.tugas.akhir.web.stepDefinitions;
+package a2.ppl.tugas.akhir.web.login;
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;

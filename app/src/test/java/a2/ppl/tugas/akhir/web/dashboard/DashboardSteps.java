@@ -1,4 +1,4 @@
-package a2.ppl.tugas.akhir.web.stepDefinitions;
+package a2.ppl.tugas.akhir.web.dashboard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

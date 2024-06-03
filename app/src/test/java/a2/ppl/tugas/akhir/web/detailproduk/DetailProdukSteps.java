@@ -1,4 +1,4 @@
-package a2.ppl.tugas.akhir.web.stepDefinitions;
+package a2.ppl.tugas.akhir.web.detailproduk;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,15 +52,15 @@ public class DetailProdukSteps {
         assertEquals(expected, currentUrl);
     }
 
-    @When("Pengguna klik gambar produk {string} pada halaman Dashboard")
+    @When("Pengguna klik gambar Produk {string} pada halaman Dashboard")
     public void penggunaKlikGambarPadaHalamanDashboard(String productName) {
         driver.findElement(By.xpath("//img[@alt='" + productName + "']")).click();
     }
 
-    @Then("Sistem menampilkan Gambar, Qty, Description, Nama, Harga Satuan, dan button {string} dari barang pada halaman Detail Produk")
-    public void sistemMenampilkanDetailProduk(String buttonName) {
+    @Then("Sistem menampilkan Gambar, Qty, Description, Nama, Harga Satuan, dan button \\(Add to cart atau Remove) dari barang pada halaman Detail Produk")
+    public void sistemMenampilkanDetailProduk() {
         assertTrue(driver.findElement(By.className("inventory_details_img")).isDisplayed());
-        assertTrue(driver.findElement(By.className("inventory_details_quanity")).isDisplayed());
+        assertTrue(driver.findElement(By.className("inventory_details_quantity")).isDisplayed());
         assertTrue(driver.findElement(By.className("inventory_details_desc")).isDisplayed());
         assertTrue(driver.findElement(By.className("inventory_details_name")).isDisplayed());
         assertTrue(driver.findElement(By.className("inventory_details_price")).isDisplayed());
@@ -69,12 +69,14 @@ public class DetailProdukSteps {
 
     @And("Pengguna berhasil mengakses halaman Detail Produk aplikasi")
     public void penggunaBerhasilMengaksesHalamanDetailProdukAplikasi() {
+        seleniumHelper.clickButtonById("item_4_title_link");
         assertTrue(driver.findElement(By.className("inventory_details")).isDisplayed());
     }
 
     @When("Pengguna klik Back To Product pada halaman Detail Produk")
     public void penggunaKlikBackToProductPadaHalamanDetailProduk() {
-        driver.findElement(By.id("inventory_details_back_button")).click();
+
+        seleniumHelper.clickButtonById("back-to-products");
     }
 
     @Then("Sistem berpindah ke halaman Dashboard")
@@ -96,8 +98,7 @@ public class DetailProdukSteps {
 
     @When("Pengguna klik gambar Cart pada halaman Detail Produk")
     public void penggunaKlikGambarCartPadaHalamanDetailProduk() {
-        WebElement cart = seleniumHelper.getElementByClassName("shopping_cart_badge");
-        cart.click();
+        seleniumHelper.clickButtonById("shopping_cart_container");
     }
 
     @Then("Sistem berpindah ke halaman Cart")
