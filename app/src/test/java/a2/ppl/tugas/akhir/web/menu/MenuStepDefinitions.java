@@ -2,7 +2,6 @@ package a2.ppl.tugas.akhir.web.menu;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -74,12 +73,14 @@ public class MenuStepDefinitions {
             default:
                 break;
         }
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
-        wait.until(ExpectedConditions.elementToBeClickable(By.id(id)));
-        try {
-            seleniumHelper.clickButtonById(id);
-        } catch (Exception e) {
+        String currentUrl = driver.getCurrentUrl();
+        String expected = "https://www.saucedemo.com/inventory.html";
+        if (id == "inventory_sidebar_link" && currentUrl == expected) {
             driver.quit();
+        } else {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+            wait.until(ExpectedConditions.elementToBeClickable(By.id(id)));
+            seleniumHelper.clickButtonById(id);
         }
     }
 
